@@ -1,4 +1,4 @@
-#include"BoardSystem.h"
+﻿#include"BoardSystem.h"
 #include<iostream>
 #include<iomanip>
 #include "Board.h"
@@ -7,101 +7,124 @@
 
 using namespace std;
 
-const std::string ALLSTARS = "  * * * * *  ";
-const std::string NOSTARS =  "  - - - - -  ";
+// Bar selection and non selection, are the board top and bottom bars
+const std::string BAR_SELECTION = "  * * * * *  ";
+const std::string BAR_NO_SELECTION =  "  - - - - -  ";
 
-const std::string D_ALLSTARS = "* --|---|-- *";
-const std::string D_NOSTARS = "| --|---|-- |";
+// Divider selection and no selection are the boards cell divider
+const std::string DIVIDER_SELECTION = "* --|---|-- *";
+const std::string DIVIDER_NO_SELECTION = "| --|---|-- |";
 
-int BoardSystem::calculatePosition(int a, int b)
+void BoardSystem::boardSelection(int x, int y)
 {
-	return (a * (BOARDSIZE / 3) + b);
+	currentBoard.x = x - 1;
+	currentBoard.y = y - 1;
 }
 
-void debugCoords(int a, int b)
+int BoardSystem::calculateYPosition(int a, int b)
 {
-	cout << a + 1 << "," << b + 1;
+	return (a * (BOARDSIZE / 3) + b);
 }
 
 void showCharacter(int value)
 {
 	std::string p = " ";
 	if (value == 1) p = " X ";
-	if (value == -1) p = " O ";
-
+	else if (value == -1) p = " O ";
+	else p = " ";
 	cout << setw(2) << p;
 }
 
 bool BoardSystem::checkXY(int x, int y)
 {
-	return selectedBoard.x == x && selectedBoard.y == y;
+	return currentBoard.x == x && currentBoard.y == y;
 }
 
-void BoardSystem::displayBar(int _x)
+/// <summary>
+/// Simple function for displaying divdiers or bars for the board,
+/// very reusable and automatically handles checking if the board is selected
+/// </summary>
+void BoardSystem::displayBarsOrDividers(int _x, std::string _selection, std::string _noSelection)
 {
-	std::string barType = NOSTARS;
-	barType = checkXY(_x, 0) ? ALLSTARS : NOSTARS;
-	cout << barType;
-	barType = checkXY(_x, 1) ? ALLSTARS : NOSTARS;
-	cout << barType;
-	barType = checkXY(_x, 2) ? ALLSTARS : NOSTARS;
-	cout << barType << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		std::string barType = _noSelection;
+		barType = checkXY(_x, i) ? _selection : _noSelection;
+		cout << barType;
+	}
+	cout << endl;
 }
 
-void BoardSystem::displayDivider(int _x)
+/// <summary>
+/// Formatt for displaying the coords of each board, this
+/// is mainly used so I can check if the console is correctly
+/// displaying each board in the right position
+/// </summary>
+void displayDebugCoordinates(int _x, int _y)
 {
-	std::string barType = NOSTARS;
-	barType = checkXY(_x, 0) ? D_ALLSTARS : D_NOSTARS;
-	cout << barType;
-	barType = checkXY(_x, 1) ? D_ALLSTARS : D_NOSTARS;
-	cout << barType;
-	barType = checkXY(_x, 2) ? D_ALLSTARS : D_NOSTARS;
-	cout << barType << endl;
+	cout << _x + 1 << "," << _y + 1;
 }
+
+// TODO: Better handle decomposition, smooth out the code a bit then implement remaining parts of assignment
 
 void BoardSystem::displayBoards()
 {	
-	int boardSize = BOARDSIZE / 3;
+	int boardSize = BOARDSIZE / 3; // Could probably be a secondary constant ¯\_(ツ)_/¯
 	bool isBoardSelected = false;
 	Coordinate boardCoords;
+	
+	int counter = 1; // used to display 1 - 3 on the side for helping people to know the coords.
 
 	cout << "      1 " << "           2" << "            3" << endl;
+	cout << "      v " << "           v" << "            v" << endl;
 
+	// Loop through each board
 	for (int boardX = 0; boardX < boardSize; boardX++)
 	{
-		displayBar(boardX);
+		// Display top bars or dividers for the current board
+		displayBarsOrDividers(boardX, BAR_SELECTION, BAR_NO_SELECTION);
 
+		// Loop through each row of cells in the current board
 		for (int boardY = 0; boardY < boardSize; boardY++)
 		{
+			// Loop through each cell in the row
 			for (int cellX = 0; cellX < boardSize; cellX++)
 			{
+				// Loop through each row within a cell
 				for (int cellY = 0; cellY < boardSize; cellY++)
 				{
-					boardCoords.y = calculatePosition(boardX, cellX) % 3;
+					boardCoords.y = calculateYPosition(boardX, cellX) % 3;
 					boardCoords.x = boardX;
 					
-					isBoardSelected = selectedBoard.x == boardCoords.x && selectedBoard.y == boardCoords.y;
-					char selectedBoardChar = ' ';
-					selectedBoardChar = isBoardSelected == true ? '*' : '|';
+					// Determine if the current cell is selected
+					isBoardSelected = currentBoard.x == boardCoords.x && currentBoard.y == boardCoords.y;
+					char selectedBoardChar = isBoardSelected == true ? '*' : '|';
 
-					if(cellY == 0) cout << selectedBoardChar;
-					else cout << '|';
-					debugCoords(boardCoords.x, boardCoords.y);
-					//showCharacter(boards[positionx][positiony].getBoardValue(cellX,cellY));
+					// Display the selected board character or the cell content
+					if(cellY == 0) 
+						cout << selectedBoardChar; // Display '*' or '|' at the beginning of a cell row
+					else
+						cout << '|'; // Display '|' for the separator between cell rows
+					
+					if(debug) displayDebugCoordinates(boardCoords.x, boardCoords.y);
+					else showCharacter(boards[boardCoords.x][boardCoords.y].getBoardValue(cellX,cellY));
+
 					if(cellY == 2)cout << selectedBoardChar;
+				}
 
+				// Display the board number (1, 2, 3) on the side of the board when
+				// cellX is 2 (end of the row) and boardY is 1 (middle row of boards) 
+				if (cellX == 2 && boardY == 1) 
+				{
+					cout << " < " << counter; // Display the board number and increment the counter
+					counter++;
 				}
 			}
+
 			cout << endl;
-			if(boardY != 2) displayDivider(boardX);
+			if(boardY != 2) displayBarsOrDividers(boardX, DIVIDER_SELECTION, DIVIDER_NO_SELECTION);
 		}
 
-		displayBar(boardX);
+		displayBarsOrDividers(boardX, BAR_SELECTION, BAR_NO_SELECTION);
 	}
-}
-
-void BoardSystem::select(int x, int y)
-{
-	selectedBoard.x = x - 1;
-	selectedBoard.y = y - 1;
 }

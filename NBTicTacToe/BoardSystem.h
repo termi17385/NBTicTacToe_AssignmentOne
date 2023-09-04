@@ -13,21 +13,25 @@ const int BOARDSIZE = 9;
 class BoardSystem
 {
 private:
+	
 	Board boards[BOARDSIZE][BOARDSIZE];
-	Coordinate selectedBoard;
-	int calculatePosition(int, int);
+	Coordinate currentBoard;
+	
+	int calculateYPosition(int, int);
 	bool checkXY(int x, int y);
-	void displayBar(int _x);
-	void displayDivider(int _x);
+	void displayBarsOrDividers(int, std::string, std::string);
+	
+	bool debug = false;
 
 public:
-	Board currentBoard;
-	const int size = 9;
 	void displayBoards();
-	void select(int, int);
-	BoardSystem(int x, int y)
+	void boardSelection(int, int);
+	
+	BoardSystem(int x, int y, bool _debug)
 	{
-		selectedBoard.x = x;
-		selectedBoard.y = y;
+		currentBoard.x = x;
+		currentBoard.y = y;
+
+		debug = _debug;
 	}
 };

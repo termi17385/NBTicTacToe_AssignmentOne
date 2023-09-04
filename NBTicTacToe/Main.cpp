@@ -14,7 +14,13 @@ using namespace std;
 
 int main()
 {
-	BoardSystem board(0, 0);
+	char ans = ' ';
+	bool debug = false;
+	
+	cout << "Do you want to display debug information? (Y/N): "; cin >> ans;
+	debug = ans == 'Y' || ans == 'y';
+
+	BoardSystem board(0, 0, debug);
 	int x;
 	int y;
 
@@ -22,6 +28,6 @@ int main()
 	{
 		board.displayBoards();
 		cout << "Select board: "; cin >> x >> y;
-		board.select(x, y);
+		board.boardSelection(x, y);
 	} while (x != -1 && y != -1);
 }

@@ -4,8 +4,6 @@
 #include <ctime>
 #include <iostream>
 
-
-
 using namespace std;
 
 int Board::getBoardValue(int x, int y)
