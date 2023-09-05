@@ -44,12 +44,15 @@ bool BoardSystem::checkXY(int x, int y)
 /// Simple function for displaying divdiers or bars for the board,
 /// very reusable and automatically handles checking if the board is selected
 /// </summary>
-void BoardSystem::displayBarsOrDividers(int _x, std::string _selection, std::string _noSelection)
+void BoardSystem::displayBarsOrDividers(int _x, bool _isDivider = false)
 {
+	std::string selection = _isDivider ? DIVIDER_SELECTION : BAR_SELECTION;
+	std::string noSelection = _isDivider ? DIVIDER_NO_SELECTION : BAR_NO_SELECTION;
+
 	for (int i = 0; i < 3; i++)
 	{
-		std::string barType = _noSelection;
-		barType = checkXY(_x, i) ? _selection : _noSelection;
+		std::string barType = noSelection;
+		barType = checkXY(_x, i) ? selection : noSelection;
 		cout << barType;
 	}
 	cout << endl;
@@ -71,7 +74,6 @@ void BoardSystem::displayBoards()
 {	
 	int boardSize = BOARDSIZE / 3; // Could probably be a secondary constant ¯\_(ツ)_/¯
 	bool isBoardSelected = false;
-	Coordinate boardCoords;
 	
 	int counter = 1; // used to display 1 - 3 on the side for helping people to know the coords.
 
@@ -82,7 +84,7 @@ void BoardSystem::displayBoards()
 	for (int boardX = 0; boardX < boardSize; boardX++)
 	{
 		// Display top bars or dividers for the current board
-		displayBarsOrDividers(boardX, BAR_SELECTION, BAR_NO_SELECTION);
+		displayBarsOrDividers(boardX);
 
 		// Loop through each row of cells in the current board
 		for (int boardY = 0; boardY < boardSize; boardY++)
@@ -93,8 +95,7 @@ void BoardSystem::displayBoards()
 				// Loop through each row within a cell
 				for (int cellY = 0; cellY < boardSize; cellY++)
 				{
-					boardCoords.y = calculateYPosition(boardX, cellX) % 3;
-					boardCoords.x = boardX;
+					Coordinate boardCoords(boardX, calculateYPosition(boardX, cellX) % 3);
 					
 					// Determine if the current cell is selected
 					isBoardSelected = currentBoard.x == boardCoords.x && currentBoard.y == boardCoords.y;
@@ -122,9 +123,9 @@ void BoardSystem::displayBoards()
 			}
 
 			cout << endl;
-			if(boardY != 2) displayBarsOrDividers(boardX, DIVIDER_SELECTION, DIVIDER_NO_SELECTION);
+			if(boardY != 2) displayBarsOrDividers(boardX, true);
 		}
 
-		displayBarsOrDividers(boardX, BAR_SELECTION, BAR_NO_SELECTION);
+		displayBarsOrDividers(boardX);
 	}
 }

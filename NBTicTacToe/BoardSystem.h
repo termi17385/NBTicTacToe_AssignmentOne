@@ -7,6 +7,14 @@ struct Coordinate
 {
 	int x = 0;
 	int y = 0;
+
+	Coordinate() : x(0), y(0) {} // Default constructor
+
+	Coordinate(int x, int y)
+	{
+		this->x = x;
+		this->y = y;
+	}
 };
 
 const int BOARDSIZE = 9;
@@ -19,7 +27,7 @@ private:
 	
 	int calculateYPosition(int, int);
 	bool checkXY(int x, int y);
-	void displayBarsOrDividers(int, std::string, std::string);
+	void displayBarsOrDividers(int _x, bool _isDivider);
 	
 	bool debug = false;
 
@@ -29,9 +37,7 @@ public:
 	
 	BoardSystem(int x, int y, bool _debug)
 	{
-		currentBoard.x = x;
-		currentBoard.y = y;
-
+		currentBoard = Coordinate(x,y);
 		debug = _debug;
 	}
 };
