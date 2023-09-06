@@ -4,12 +4,17 @@
 
 using namespace std;
 
+// Bar selection and non selection, are the board top and bottom bars
+const std::string BAR_SELECTION = "  * * * * *  ";
+const std::string BAR_NO_SELECTION = "  - - - - -  ";
+
+// Divider selection and no selection are the boards cell divider
+const std::string DIVIDER_SELECTION = "* --|---|-- *";
+const std::string DIVIDER_NO_SELECTION = "| --|---|-- |";
+
 const int GRID_SIZE = 9;
-const int BOARD_SIZE = 3;
 
-const std::string BOARD_SEPARATOR = " -----------   -----------   ----------- ";
-const std::string ROW_SEPARATOR = "| --|---|-- | | --|---|-- | | --|---|-- |";
-
+#pragma region GamePlay
 void NBTicTacToe::play()
 {
 	// What is the counterpart of this function in the original code?
@@ -21,11 +26,15 @@ void NBTicTacToe::play()
 	{
 		int x, y;
 
-		processMove(x,y,player);
-
 		displayBoards();
 
-		winningPlayer = getBoard(currentBoard).gameStatus(); // check the win condition
+		processMove(x,y,player);
+
+		//cout << endl;
+		//displayBoards();
+		//cout << endl;
+
+		winningPlayer = grid[currentBoard.x][currentBoard.y].gameStatus(); // check the win condition
 
 		// 1 = X, -1 = O and 0 = no one has won
 		if (winningPlayer == 1 || winningPlayer == -1) 
@@ -44,7 +53,7 @@ void NBTicTacToe::play()
 			player = player == 1 ? -1 : 1;
 			currentBoard = Coordinate(x, y);
 
-			while (getBoard(currentBoard).isBoardFull())
+			while (grid[currentBoard.x][currentBoard.y].isBoardFull())
 			{
 				srand(time(NULL));
 				currentBoard = Coordinate(rand() % 3, rand() % 3);
@@ -53,179 +62,6 @@ void NBTicTacToe::play()
 
 	} while (currentState == IsPlaying);
 	determineWinner(winningPlayer);
-}
-
-#pragma region Player Moves
-void NBTicTacToe::getXMove(int& x, int& y)
-{
-	srand(time(NULL));
-	cout << "Player " << "X" << " entering move now...." << endl;
-
-	if (!isBoardFull(currentBoard))
-	{
-		int row, col;
-
-		do
-		{
-			row = rand() % 3;
-			col = rand() % 3;
-		} while (!getBoard(currentBoard).isValidMove(row, col));
-		x = row;
-		y = col;
-	}
-}
-
-void NBTicTacToe::getOMove(int& x, int& y)
-{
-	cout << "Player " << "O" << " enter move: ";
-
-	if (!isBoardFull(currentBoard))
-	{
-		int row, col;
-		do
-		{
-			cin >> row >> col;
-			cout << endl;
-		} while (!getBoard(currentBoard).isValidMove(row - 1, col - 1));
-
-		x = row - 1;
-		y = col - 1;
-	}
-}
-
-void NBTicTacToe::processMove(int& _x, int& _y, int& _player)
-{
-	(_player == 1) ? getXMove(_x, _y) : getOMove(_x, _y);
-	grid[currentBoard.x][currentBoard.y].addMove(_x, _y, _player);
-}
-#pragma endregion
-
-#pragma region Display Boards
-///<summary>
-/// Handles column separators in the game board display.
-///</summary>
-///<param name="coord">The coordinate being tracked in the game board.</param>
-///<param name="y">The current column index.</param>
-void columnSeparator(Coordinate& coord, int y)
-{
-	if (y % BOARD_SIZE == BOARD_SIZE - 1)
-	{
-		coord.y++;
-		coord.y = coord.y % BOARD_SIZE;
-		cout << " |";
-	}
-	coord = coord;
-}
-
-///<summary>
-/// Handles row separators in the game board display.
-///</summary>
-///<param name="coord">The coordinate being tracked in the game board.</param>
-///<param name="x">The current row index.</param>
-void rowSeparator(Coordinate& coord, int x)
-{
-	if (x % BOARD_SIZE == BOARD_SIZE - 1)
-	{
-		coord.x++;
-		coord.x = coord.x % BOARD_SIZE;
-		if (x != 8) cout << endl << BOARD_SEPARATOR << endl;
-	}
-	coord = coord;
-}
-
-///<summary>
-/// Determines the player ('X', 'O', or empty) for a specific grid cell and board position.
-///</summary>
-///<param name="cell">The cell coordinate.</param>
-///<param name="board">The coordinate of the current game board.</param>
-///<returns>The player ('X', 'O', or empty) for the cell.</returns>
-char NBTicTacToe::getPlayerForCell(Coordinate cell, Coordinate board)
-{
-	int move = grid[cell.x][cell.y].getMove(board.x % 3, board.y % 3);
-	if (move == 1) return 'X';
-	else if (move == -1) return 'O';
-	else return ' ';
-}
-
-
-
-///<summary>
-/// Displays the game boards along with separators.
-///</summary>
-void NBTicTacToe::displayBoards()
-{
-	// current = the current grid we want to access via the loop
-	// it is not the same as current board, which is the current board we are playing on
-
-	Coordinate current{};
-	current.x = 0;
-	current.y = 0;
-
-	// board is the coordinates for the current grid and that grid's board, this allows us to grab
-	// information based on what played played on x tile in board.
-
-	Coordinate board{};
-	board.x = 0;
-	board.y = 0;
-
-	char player = ' ';
-
-	// Initial Separator, adds line to the top
-	cout << endl << BOARD_SEPARATOR << endl;
-	for (int x = 0; x < GRID_SIZE; x++)
-	{
-		cout << "|";
-		for (int y = 0; y < GRID_SIZE; y++)
-		{
-			/*
-				The loop works by implementing across rows then working down
-				for instance we start say in position:
-
-				grid[0][0] Then access the board for that cell
-
-				We do this 3 times before adding a column separator then moving to the next board in the row
-				grid[0][0].getMove(0,0);
-				grid[0][0].getMove(0,1);
-				grid[0][0].getMove(0,2);
-
-				grid[0][1].getMove(0,0);
-				grid[0][1].getMove(0,1);
-				grid[0][1].getMove(0,2);
-
-				.....
-
-				After that we move down a row
-
-				this repeats the cycle above, 2 more times making sure to create the first 3 tic tac toe boards,
-				before we move to the next 3 then the last 3
-				grid[0][0].getMove(1,0);
-			*/
-
-			// Grabs the current player character for the cell and prints it to console
-			cout << setw(1) << " " << getPlayerForCell(current, board);
-
-			// Determines when to add horizontal separators
-			if (y != GRID_SIZE - 1) cout << " |";
-
-			columnSeparator(current, y);
-
-			board.y++;
-			board.y = board.y % 3;
-		}
-
-		rowSeparator(current, x);
-
-		board.x++;
-		board.x = board.x % BOARD_SIZE;
-		if (x != GRID_SIZE - 1 && x % BOARD_SIZE != 2) cout << endl << ROW_SEPARATOR << endl;
-		else if (x % BOARD_SIZE == 2) cout << endl << BOARD_SEPARATOR << endl;
-	}
-	cout << endl;
-}
-
-TicTacToe NBTicTacToe::getBoard(Coordinate _boardCoords)
-{
-	return grid[_boardCoords.x][_boardCoords.y];
 }
 
 bool NBTicTacToe::isBoardFull(Coordinate _cBoard)
@@ -251,5 +87,155 @@ void NBTicTacToe::determineWinner(int _winner)
 	}
 
 	else cout << "Unexpected Win Condition, Could be a fault?";
+}
+#pragma endregion
+
+#pragma region Player Moves
+void NBTicTacToe::getXMove(int& x, int& y)
+{
+	srand(time(NULL));
+	cout << "Player " << "X" << " entering move now...." << endl;
+
+	if (!isBoardFull(currentBoard))
+	{
+		int row, col;
+
+		do
+		{
+			row = rand() % 3;
+			col = rand() % 3;
+		} while (!grid[currentBoard.x][currentBoard.y].isValidMove(row, col));
+		x = row;
+		y = col;
+	}
+}
+
+void NBTicTacToe::getOMove(int& x, int& y)
+{
+	cout << "Player " << "O" << " enter move: ";
+
+	if (!isBoardFull(currentBoard))
+	{
+		int row, col;
+		do
+		{
+			cin >> row >> col;
+			cout << endl;
+		} while (!grid[currentBoard.x][currentBoard.y].isValidMove(row - 1, col - 1));
+
+		x = row - 1;
+		y = col - 1;
+	}
+}
+
+void NBTicTacToe::processMove(int& _x, int& _y, int& _player)
+{
+	(_player == 1) ? getXMove(_x, _y) : getOMove(_x, _y);
+	grid[currentBoard.x][currentBoard.y].addMove(_x, _y, _player);
+}
+#pragma endregion
+
+#pragma region Board Display Methods
+void displayDividerCharacter(int _cellY, bool _selected)
+{
+	char dividerCharacter = _selected == true ? '*' : '|';
+	if (_cellY == 0) cout << dividerCharacter; // Display '*' or '|' at the beginning of a cell row
+	else cout << '|'; // Display '|' for the separator between cell rows
+}
+
+void showCharacter(int value)
+{
+	char p = ' ';
+	if (value == 1) p =  'X';
+	else if (value == -1) p = 'O';
+	else p = ' ';
+	cout << setw(2) << p;
+}
+
+void NBTicTacToe::displayBoards()
+{
+	bool isBoardSelected = false;
+	int counter = 1, index = 0;
+	Coordinate boardCoords;
+	
+	cout << "      1 " << "           2" << "            3" << endl;
+	cout << "      v " << "           v" << "            v" << endl;
+
+	// Loop through each board
+	for (int boardX = 0; boardX < BOARDSIZE; boardX++)
+	{
+		// Display top bars or dividers for the current board
+		displayBarsOrDividers(boardX);
+
+		// Loop through each row of cells in the current board
+		for (int boardY = 0; boardY < BOARDSIZE; boardY++)
+		{
+			// Loop through each cell in the row
+			for (int cellX = 0; cellX < BOARDSIZE; cellX++)
+			{
+				// Loop through each row within a cell
+				for (int cellY = 0; cellY < BOARDSIZE; cellY++)
+				{
+					boardCoords.x = boardX;
+					boardCoords.y = calculateYPosition(boardX, cellX) % 3;
+
+					// Determine if the current cell is selected
+					isBoardSelected = checkXY(boardCoords);
+					char selectedBoardChar = isBoardSelected == true ? '*' : '|';
+
+					// Display the selected board character or the cell content
+					if (cellY == 0) cout << selectedBoardChar; // Display '*' or '|' at the beginning of a cell row
+					else cout << '|'; // Display '|' for the separator between cell rows
+
+					//cout << boardCoords.x + 1 << "," << boardCoords.y + 1;
+					TicTacToe board = grid[boardCoords.x][boardCoords.y];
+					int player = board.getMove(index, cellY);
+
+					cout << setw(2) << player << " ";
+					if (cellY == 2) cout << selectedBoardChar;
+				}
+
+				// Display the board number (1, 2, 3) on the side of the board when
+				// cellX is 2 (end of the row) and boardY is 1 (middle row of boards) 
+				if (cellX == 2 && boardY == 1)
+				{
+					cout << " < " << counter; // Display the board number and increment the counter
+					counter++;
+				}
+			}
+
+			index++;
+			index = index % 3;
+
+			cout << endl;
+			if (boardY != 2) displayBarsOrDividers(boardX, true);
+		}
+
+		displayBarsOrDividers(boardX);
+	}
+}
+
+int NBTicTacToe::calculateYPosition(int _a, int _b)
+{
+	return (_a * (BOARDSIZE) + _b);
+}
+
+bool NBTicTacToe::checkXY(Coordinate _validate)
+{
+	return currentBoard == _validate;
+}
+
+void NBTicTacToe::displayBarsOrDividers(int _x, bool _isDivider)
+{
+	std::string selection = _isDivider ? DIVIDER_SELECTION : BAR_SELECTION;
+	std::string noSelection = _isDivider ? DIVIDER_NO_SELECTION : BAR_NO_SELECTION;
+
+	for (int i = 0; i < 3; i++)
+	{
+		std::string barType = noSelection;
+		barType = checkXY({_x,i}) ? selection : noSelection;
+		cout << barType;
+	}
+	cout << endl;
 }
 #pragma endregion

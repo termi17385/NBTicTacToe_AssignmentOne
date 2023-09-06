@@ -13,6 +13,11 @@ struct Coordinate
 		this->x = x;
 		this->y = y;
 	}	
+
+	bool operator==(const Coordinate& other) const
+	{
+		return (x == other.x && y == other.y);
+	}
 };
 
 // Used to simplify determining the game state
@@ -32,6 +37,7 @@ public:
 		currentBoard = Coordinate(x,y);
 	}
 	void play();
+	void displayBoards();
 
 private:
 
@@ -45,11 +51,13 @@ private:
 	void getXMove(int&, int&);
 	void getOMove(int&, int&);
 	void processMove(int&, int&, int&);
-	char getPlayerForCell(Coordinate cell, Coordinate board);
 
 	// Board Methods
 	TicTacToe grid[3][3];
 	Coordinate currentBoard;
-	TicTacToe getBoard(Coordinate _boardCoords);
-	void displayBoards();
+
+	// Display Methods
+	int calculateYPosition(int, int);
+	bool checkXY(Coordinate);
+	void displayBarsOrDividers(int, bool _isDivider = false);
 };

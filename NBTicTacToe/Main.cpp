@@ -9,6 +9,7 @@ int main()
 
 	NBTicTacToe game((int)rand % 3, (int)rand % 3);
 	game.play();
+	//game.displayBoards();
 
 	return 0;
 }
