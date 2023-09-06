@@ -25,9 +25,6 @@ void NBTicTacToe::play()
 	do
 	{
 		int x, y;
-
-		displayBoards();
-
 		processMove(x,y,player);
 
 		//cout << endl;
@@ -52,15 +49,25 @@ void NBTicTacToe::play()
 		{
 			player = player == 1 ? -1 : 1;
 			currentBoard = Coordinate(x, y);
+			
+			cout << endl;
+			displayBoards();
+			cout << endl;
+
 
 			while (grid[currentBoard.x][currentBoard.y].isBoardFull())
 			{
 				srand(time(NULL));
 				currentBoard = Coordinate(rand() % 3, rand() % 3);
-			}
+			}			
 		}
 
 	} while (currentState == IsPlaying);
+
+	cout << endl;
+	displayBoards();
+	cout << endl;
+
 	determineWinner(winningPlayer);
 }
 
@@ -143,13 +150,13 @@ void displayDividerCharacter(int _cellY, bool _selected)
 	else cout << '|'; // Display '|' for the separator between cell rows
 }
 
-void showCharacter(int value)
+char showCharacter(int value)
 {
 	char p = ' ';
 	if (value == 1) p =  'X';
 	else if (value == -1) p = 'O';
 	else p = ' ';
-	cout << setw(2) << p;
+	return p;
 }
 
 void NBTicTacToe::displayBoards()
@@ -191,7 +198,7 @@ void NBTicTacToe::displayBoards()
 					TicTacToe board = grid[boardCoords.x][boardCoords.y];
 					int player = board.getMove(index, cellY);
 
-					cout << setw(2) << player << " ";
+					cout << setw(2) << showCharacter(player) << " ";
 					if (cellY == 2) cout << selectedBoardChar;
 				}
 
