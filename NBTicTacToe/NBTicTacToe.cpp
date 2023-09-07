@@ -1,6 +1,7 @@
-#include "NBTicTacToe.h"
 #include <iostream>
 #include <iomanip>
+#include "Coordinate.h"
+#include "NBTicTacToe.h"
 
 
 // TODO: code needs to be cleaned up with better decomposition
@@ -35,7 +36,7 @@ void NBTicTacToe::displayNBTicTacToe()
 // Pointer reference for getting the TicTacToe board from the grid
 TicTacToe* NBTicTacToe::getBoard(Coordinate _gridCoords)
 {
-	return &grid[_gridCoords.x][_gridCoords.y];
+	return &boards[_gridCoords.x][_gridCoords.y];
 }
 
 bool NBTicTacToe::isBoardFull(Coordinate _current)
@@ -130,7 +131,7 @@ char getPlayerForCell(int _value)
 
 void NBTicTacToe::displayPlayerOnBoard(Coordinate _boardCoords, int _index, int _cellY)
 {
-	TicTacToe board = grid[_boardCoords.x][_boardCoords.y];
+	TicTacToe board = boards[_boardCoords.x][_boardCoords.y];
 	int player = board.getMove(_index, _cellY);
 	cout << setw(2) << getPlayerForCell(player) << " ";
 }

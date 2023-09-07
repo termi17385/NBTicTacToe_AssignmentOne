@@ -1,29 +1,44 @@
+#include "Coordinate.h"
 #include "NBGame.h"
+
+#include "Player.h"
+#include "HumanPlayer.h"
+#include "RandomPlayer.h"
+
+#include <iostream>
+
+
 const int MAXMOVES = 9;
 
-namespace NBG
+void NBGAME::NBGame::initialisePlayers()
 {
-	void NBGame::play()
+	players[0] = new HumanPlayer();
+	players[1] = new RandomPlayer();
+}
+
+void NBGAME::NBGame::play()
+{
+	int player = 1;
+	int winningPlayer = 0;
+	Coordinate movePosition(0, 0);
+
+	do
 	{
-		int player = 1;
-		int winningPlayer = 0;
-		Coordinate movePosition(0, 0);
+		// handle movement first
+		TicTacToe* board = nbTicTacToe.getBoard(movePosition);
 
-		do
-		{
-			// handle movement first
-			TicTacToe* Board = nbTicTacToe.getBoard(movePosition);
 
-		} while (true);
-	}
+	} while (true);
+}
 
-	bool NBGame::allBoardsFull()
-	{
-		return amountOfFullBoards >= MAXMOVES;
-	}
+bool NBGAME::NBGame::allBoardsFull()
+{
+	return amountOfFullBoards >= MAXMOVES;
+}
 
-	void NBGame::determineWinner(int)
-	{
+void NBGAME::NBGame::determineWinner(int)
+{
+	
+}
 
-	}
-};
+

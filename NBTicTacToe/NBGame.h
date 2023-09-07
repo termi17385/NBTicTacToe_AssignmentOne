@@ -6,7 +6,7 @@
 #include "Coordinate.h"
 #include "NBTicTacToe.h"
 
-namespace NBG
+namespace NBGAME
 {
 	enum GameState
 	{
@@ -18,8 +18,9 @@ namespace NBG
 	class NBGame
 	{
 	private:
-		Coordinate currentBoard;
+		Coordinate nb_currentBoard;
 		NBTicTacToe nbTicTacToe;
+		Player* players[2];
 
 		GameState currentGameState = IsPlaying;
 		int amountOfFullBoards = 0;
@@ -27,14 +28,16 @@ namespace NBG
 		bool allBoardsFull();
 		void determineWinner(int);
 
+		void initialisePlayers();
+
 	public:
 		NBGame(Coordinate _startingBoard)
 		{
-			currentBoard = _startingBoard;
+			nb_currentBoard = _startingBoard;
 			nbTicTacToe.setCurrentBoard(_startingBoard);
 		}
 		void play();
 	};
-};
+}
 
 #endif

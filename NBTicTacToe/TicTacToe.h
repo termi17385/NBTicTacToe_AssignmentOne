@@ -7,7 +7,7 @@ class TicTacToe
 {
 private:
 	int noOfMoves;								// how many moves the players have made in total
-	int board[BOARDSIZE][BOARDSIZE];			// An array for the board with declared size
+	int cells[BOARDSIZE][BOARDSIZE];			// An array for the board with declared size
 
 	int checkRows();
 	int checkColumns();

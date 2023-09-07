@@ -1,16 +1,14 @@
 #pragma once
+#include "TicTacToe.h"
 
 #ifndef NBTICTACTOE_H
 #define NBTICTACTOE_H
-
-#include "TicTacToe.h"
-#include "Coordinate.h"
 
 class NBTicTacToe
 {
 private:
 
-	TicTacToe grid[BOARDSIZE][BOARDSIZE];
+	TicTacToe boards[BOARDSIZE][BOARDSIZE];
 	Coordinate currentBoard;
 
 	int calculateYPosition(int, int);

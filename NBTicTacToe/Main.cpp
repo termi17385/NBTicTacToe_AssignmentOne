@@ -1,7 +1,7 @@
-#include "NBTicTacToe.h"
-#include "NBGame.h"
 #include <ctime>
 #include <iostream>
+#include "Coordinate.h"
+#include "NBGame.h"
 
 Coordinate getRandomStartingPoint()
 {
@@ -14,7 +14,7 @@ Coordinate getRandomStartingPoint()
 void runGame()
 {
 	Coordinate startCoordinate = getRandomStartingPoint();
-	NBG::NBGame game(startCoordinate);
+	NBGAME::NBGame game(startCoordinate);
 	game.play();
 }
 

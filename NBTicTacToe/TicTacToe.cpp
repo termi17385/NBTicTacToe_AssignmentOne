@@ -1,13 +1,15 @@
 #include "TicTacToe.h"
+
 #include <stdlib.h>
 #include <time.h>
 
 #include<string>
 #include<iostream>
 #include<iomanip>
-#include "NBGame.cpp"
 
 using namespace std;
+
+const int MAXMOVES = 9;
 
 /// <summary>
 /// This is a Constructor is it called on the initialisation of the object
@@ -17,7 +19,7 @@ TicTacToe::TicTacToe()
 {
 	for (int row = 0; row < 3; row++)
 		for (int col = 0; col < 3; col++)
-			board[row][col] = 0;
+			cells[row][col] = 0;
 
 	noOfMoves = 0;
 }
@@ -29,12 +31,12 @@ int TicTacToe::getNoOfMoves()
 
 int TicTacToe::getMove(int _x, int _y)
 {
-	return board[_x][_y];
+	return cells[_x][_y];
 }
 
 bool TicTacToe::isValidMove(int _x, int _y)
 {
-	if (board[_x][_y] == 0)
+	if (cells[_x][_y] == 0)
 		return true;
 	else
 		return false;
@@ -45,7 +47,7 @@ bool TicTacToe::isValidMove(int _x, int _y)
 /// </summary>
 void TicTacToe::addMove(int _x, int _y, int _player)
 {
-	board[_x][_y] = _player;
+	cells[_x][_y] = _player;
 	noOfMoves++;
 }
 
@@ -54,10 +56,10 @@ int TicTacToe::checkRows()
 	int rowValue = 0;
 	for (int i = 0; i < 3; i++)
 	{
-		rowValue = board[i][0];
+		rowValue = cells[i][0];
 		if (rowValue == 0) continue;
 
-		if (rowValue == board[i][1] && rowValue == board[i][2])
+		if (rowValue == cells[i][1] && rowValue == cells[i][2])
 			return rowValue;
 	}
 
@@ -69,10 +71,10 @@ int TicTacToe::checkColumns()
 	int colValue = 0;
 	for (int i = 0; i < 3; i++)
 	{
-		colValue = board[0][i];
+		colValue = cells[0][i];
 		if (colValue == 0) continue;
 
-		if (colValue == board[1][i] && colValue == board[2][i])
+		if (colValue == cells[1][i] && colValue == cells[2][i])
 			return colValue;
 	}
 
@@ -87,10 +89,10 @@ int TicTacToe::checkDiagonals()
 	// |1,0|1,1|1,2|
 	// |---|---|---|
 	// |2,0|2,1|2,2|
-	int diagonalValue = board[1][1];
+	int diagonalValue = cells[1][1];
 	
-	bool diagonalWin = ((diagonalValue == board[0][0] && diagonalValue == board[2][2]) 
-		|| (diagonalValue == board[0][2] && diagonalValue == board[2][0]) && diagonalValue != 0);
+	bool diagonalWin = ((diagonalValue == cells[0][0] && diagonalValue == cells[2][2]) 
+		|| (diagonalValue == cells[0][2] && diagonalValue == cells[2][0]) && diagonalValue != 0);
 
 	return diagonalWin ? diagonalValue : 0;
 }
