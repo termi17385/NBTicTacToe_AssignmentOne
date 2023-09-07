@@ -1,15 +1,21 @@
 #include "NBTicTacToe.h"
+#include "NBGame.h"
 #include <ctime>
 #include <iostream>
 
-int main()
+Coordinate getRandomStartingPoint()
 {
 	srand(time(NULL));
-	//TicTacToe game;
-
-	NBTicTacToe game((int)rand % 3, (int)rand % 3);
-	game.play();
-	//game.displayBoards();
-
-	return 0;
+	int randX = rand() % 3;
+	int randY = rand() % 3;
+	return Coordinate(randX, randY);
 }
+
+void runGame()
+{
+	Coordinate startCoordinate = getRandomStartingPoint();
+	NBG::NBGame game(startCoordinate);
+	game.play();
+}
+
+int main() { runGame(); }

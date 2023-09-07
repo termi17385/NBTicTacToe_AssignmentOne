@@ -5,6 +5,7 @@
 #include<string>
 #include<iostream>
 #include<iomanip>
+#include "NBGame.cpp"
 
 using namespace std;
 
@@ -111,46 +112,7 @@ int TicTacToe::gameStatus()
 	return checkDiagonals();
 }
 
-bool TicTacToe::isBoardFull()
+bool TicTacToe::t_isBoardFull()
 {
-	return noOfMoves >= 9;
+	return noOfMoves >= MAXMOVES;
 }
-
-//std::string TicTacToe::displayBoard()
-//{
-//	// Board is obtained as a variable of TicTacToe header file class
-//	// this method is part of the TicTacToe class so it can access that variable
-//	// in this case the variable board is a multidimensional array.
-//	//   - - - - -
-//	// | --|---|-- |
-//	// | --|---|-- |
-//	// | --|---|-- |
-//	//   - - - - -
-//
-//	std::string _board;
-//
-//	_board = "\n\n";
-//	_board += "  - - - - -\n";
-//
-//	for (int i = 0; i < 3; i++)
-//	{
-//		_board += "| ";
-//		for (int j = 0; j < 3; j++)
-//		{
-//#pragma region Get Player Symbol
-//			char playerSymbol = ' ';
-//			if (board[i][j] == 1) playerSymbol = 'X';
-//			else if (board[i][j] == -1) playerSymbol = 'O';
-//#pragma endregion
-//			//_board += setw(1);
-//			_board += playerSymbol;
-//			_board += " | ";
-//		}
-//		if (i != 2) _board += "\n  --|---|--\n";
-//	}
-//
-//	_board += "\n  - - - - -\n";
-//	_board += "\n\n";
-//
-//	return _board;
-//}
