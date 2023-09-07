@@ -2,6 +2,13 @@
 #include <iostream>
 #include <iomanip>
 
+
+// TODO: code needs to be cleaned up with better decomposition
+// TODO: next is to implement NBGame and other abstractions
+// TODO: need a player class that can be inherited for each player type
+
+// TODO: split logic flow into correct classes
+
 using namespace std;
 
 // Bar selection and non selection, are the board top and bottom bars
@@ -24,13 +31,10 @@ void NBTicTacToe::play()
 
 	do
 	{
+		// Process all the logic for moves and win, draw, lose conditions.
+
 		int x, y;
 		processMove(x,y,player);
-
-		//cout << endl;
-		//displayBoards();
-		//cout << endl;
-
 		winningPlayer = grid[currentBoard.x][currentBoard.y].gameStatus(); // check the win condition
 
 		// 1 = X, -1 = O and 0 = no one has won
@@ -47,27 +51,34 @@ void NBTicTacToe::play()
 
 		if (currentState == IsPlaying)
 		{
+			// while still playing and the moves have been processed, change the current board
+			// display updates
+
+			// this ensures the most accurate up to date board information is displayed for the next player.
 			player = player == 1 ? -1 : 1;
 			currentBoard = Coordinate(x, y);
 			
 			cout << endl;
 			displayBoards();
 			cout << endl;
-
-
+			
+			srand(time(NULL));
+			// while current board is full
 			while (grid[currentBoard.x][currentBoard.y].isBoardFull())
 			{
-				srand(time(NULL));
+				// we get a random board. and keep looping till it no longer shows as full
 				currentBoard = Coordinate(rand() % 3, rand() % 3);
 			}			
 		}
 
 	} while (currentState == IsPlaying);
 
+	// Display the boards one more time, so players can atleast see the winning board
 	cout << endl;
 	displayBoards();
 	cout << endl;
 
+	// Handle determining who the winner is
 	determineWinner(winningPlayer);
 }
 
@@ -143,6 +154,7 @@ void NBTicTacToe::processMove(int& _x, int& _y, int& _player)
 #pragma endregion
 
 #pragma region Board Display Methods
+#pragma region Player and Symbols
 void displayDividerCharacter(int _cellY, bool _selected)
 {
 	char dividerCharacter = _selected == true ? '*' : '|';
@@ -150,13 +162,57 @@ void displayDividerCharacter(int _cellY, bool _selected)
 	else cout << '|'; // Display '|' for the separator between cell rows
 }
 
-char showCharacter(int value)
+
+char getPlayerForCell(int _value)
 {
-	char p = ' ';
-	if (value == 1) p =  'X';
-	else if (value == -1) p = 'O';
-	else p = ' ';
-	return p;
+	char player = ' ';
+	if (_value == 1) player =  'X';
+	else if (_value == -1) player = 'O';
+	else player = ' ';
+	return player;
+}
+
+void NBTicTacToe::displayPlayerOnBoard(Coordinate _boardCoords, int _index, int _cellY)
+{
+	TicTacToe board = grid[_boardCoords.x][_boardCoords.y];
+	int player = board.getMove(_index, _cellY);
+	cout << setw(2) << getPlayerForCell(player) << " ";
+}
+#pragma endregion
+
+#pragma region Display Boards and Cells
+void NBTicTacToe::displayCells(int _boardX, int _boardY, int& _counter, int _index, bool _isBoardSelected, Coordinate& _boardCoords)
+{
+	// Loop through each cell in the row
+	for (int cellX = 0; cellX < BOARDSIZE; cellX++)
+	{
+		// Loop through each row within a cell
+		for (int cellY = 0; cellY < BOARDSIZE; cellY++)
+		{
+			_boardCoords.x = _boardX;
+			_boardCoords.y = calculateYPosition(_boardX, cellX) % 3;
+
+			// Determine if the current cell is selected
+			_isBoardSelected = checkXY(_boardCoords);
+			char selectedBoardChar = _isBoardSelected == true ? '*' : '|';
+
+			// Display the selected board character or the cell content
+			if (cellY == 0) cout << selectedBoardChar; // Display '*' or '|' at the beginning of a cell row
+			else cout << '|'; // Display '|' for the separator between cell rows
+
+			//cout << boardCoords.x + 1 << "," << boardCoords.y + 1;
+			displayPlayerOnBoard(_boardCoords, _index, cellY);
+			if (cellY == 2) cout << selectedBoardChar;
+		}
+
+		// Display the board number (1, 2, 3) on the side of the board when
+		// cellX is 2 (end of the row) and boardY is 1 (middle row of boards) 
+		if (cellX == 2 && _boardY == 1)
+		{
+			cout << " < " << _counter; // Display the board number and increment the counter
+			_counter++;
+		}
+	}
 }
 
 void NBTicTacToe::displayBoards()
@@ -178,38 +234,7 @@ void NBTicTacToe::displayBoards()
 		for (int boardY = 0; boardY < BOARDSIZE; boardY++)
 		{
 			// Loop through each cell in the row
-			for (int cellX = 0; cellX < BOARDSIZE; cellX++)
-			{
-				// Loop through each row within a cell
-				for (int cellY = 0; cellY < BOARDSIZE; cellY++)
-				{
-					boardCoords.x = boardX;
-					boardCoords.y = calculateYPosition(boardX, cellX) % 3;
-
-					// Determine if the current cell is selected
-					isBoardSelected = checkXY(boardCoords);
-					char selectedBoardChar = isBoardSelected == true ? '*' : '|';
-
-					// Display the selected board character or the cell content
-					if (cellY == 0) cout << selectedBoardChar; // Display '*' or '|' at the beginning of a cell row
-					else cout << '|'; // Display '|' for the separator between cell rows
-
-					//cout << boardCoords.x + 1 << "," << boardCoords.y + 1;
-					TicTacToe board = grid[boardCoords.x][boardCoords.y];
-					int player = board.getMove(index, cellY);
-
-					cout << setw(2) << showCharacter(player) << " ";
-					if (cellY == 2) cout << selectedBoardChar;
-				}
-
-				// Display the board number (1, 2, 3) on the side of the board when
-				// cellX is 2 (end of the row) and boardY is 1 (middle row of boards) 
-				if (cellX == 2 && boardY == 1)
-				{
-					cout << " < " << counter; // Display the board number and increment the counter
-					counter++;
-				}
-			}
+			displayCells(boardX, boardY, counter, index, isBoardSelected, boardCoords);
 
 			index++;
 			index = index % 3;
@@ -221,6 +246,7 @@ void NBTicTacToe::displayBoards()
 		displayBarsOrDividers(boardX);
 	}
 }
+#pragma endregion
 
 int NBTicTacToe::calculateYPosition(int _a, int _b)
 {

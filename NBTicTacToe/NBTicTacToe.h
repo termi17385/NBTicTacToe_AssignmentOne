@@ -35,9 +35,11 @@ public:
 	NBTicTacToe(int x, int y)
 	{
 		currentBoard = Coordinate(x,y);
+	
+		currentState = IsPlaying;
+		fullBoards = 0;
 	}
 	void play();
-	void displayBoards();
 
 private:
 
@@ -60,4 +62,7 @@ private:
 	int calculateYPosition(int, int);
 	bool checkXY(Coordinate);
 	void displayBarsOrDividers(int, bool _isDivider = false);
+	void displayBoards();
+	void displayCells(int, int, int&, int, bool, Coordinate&);
+	void displayPlayerOnBoard(Coordinate, int, int);
 };
