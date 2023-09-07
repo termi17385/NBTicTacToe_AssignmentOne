@@ -8,15 +8,15 @@ struct Coordinate
 
 	Coordinate() : x(0), y(0) {} // Default constructor
 
-	Coordinate(int x, int y)
+	Coordinate(int _x, int _y)
 	{
-		this->x = x;
-		this->y = y;
+		this->x = _x;
+		this->y = _y;
 	}	
 
-	bool operator==(const Coordinate& other) const
+	bool operator==(const Coordinate& _other) const
 	{
-		return (x == other.x && y == other.y);
+		return (x == _other.x && y == _other.y);
 	}
 };
 
@@ -32,9 +32,9 @@ class NBTicTacToe
 {
 public:
 	// Constructor and play
-	NBTicTacToe(int x, int y)
+	NBTicTacToe(int _x, int _y)
 	{
-		currentBoard = Coordinate(x,y);
+		currentBoard = Coordinate(_x,_y);
 	
 		currentState = IsPlaying;
 		fullBoards = 0;
@@ -55,7 +55,7 @@ private:
 	void processMove(int&, int&, int&);
 
 	// Board Methods
-	TicTacToe grid[3][3];
+	TicTacToe grid[BOARDSIZE][BOARDSIZE];
 	Coordinate currentBoard;
 
 	// Display Methods

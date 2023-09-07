@@ -6,11 +6,11 @@
 // TODO: code needs to be cleaned up with better decomposition
 // TODO: next is to implement NBGame and other abstractions
 // TODO: need a player class that can be inherited for each player type
-
 // TODO: split logic flow into correct classes
 
 using namespace std;
 
+#pragma region Constant Variables
 // Bar selection and non selection, are the board top and bottom bars
 const std::string BAR_SELECTION = "  * * * * *  ";
 const std::string BAR_NO_SELECTION = "  - - - - -  ";
@@ -18,8 +18,7 @@ const std::string BAR_NO_SELECTION = "  - - - - -  ";
 // Divider selection and no selection are the boards cell divider
 const std::string DIVIDER_SELECTION = "* --|---|-- *";
 const std::string DIVIDER_NO_SELECTION = "| --|---|-- |";
-
-const int GRID_SIZE = 9;
+#pragma endregion
 
 #pragma region GamePlay
 void NBTicTacToe::play()

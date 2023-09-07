@@ -26,14 +26,14 @@ int TicTacToe::getNoOfMoves()
 	return noOfMoves;
 }
 
-int TicTacToe::getMove(int x, int y)
+int TicTacToe::getMove(int _x, int _y)
 {
-	return board[x][y];
+	return board[_x][_y];
 }
 
-bool TicTacToe::isValidMove(int x, int y)
+bool TicTacToe::isValidMove(int _x, int _y)
 {
-	if (board[x][y] == 0)
+	if (board[_x][_y] == 0)
 		return true;
 	else
 		return false;
@@ -42,9 +42,9 @@ bool TicTacToe::isValidMove(int x, int y)
 /// <summary>
 /// When called, will tell the array at position {x,y} this <seealso cref="player"/> made a move
 /// </summary>
-void TicTacToe::addMove(int x, int y, int player)
+void TicTacToe::addMove(int _x, int _y, int _player)
 {
-	board[x][y] = player;
+	board[_x][_y] = _player;
 	noOfMoves++;
 }
 
@@ -80,17 +80,17 @@ int TicTacToe::checkColumns()
 
 int TicTacToe::checkDiagonals()
 {
-
 	//Check diagonals for a win
 	// |0,0|0,1|0,2|
 	// |---|---|---|
 	// |1,0|1,1|1,2|
 	// |---|---|---|
 	// |2,0|2,1|2,2|
-
-
 	int diagonalValue = board[1][1];
-	bool diagonalWin = ((diagonalValue == board[0][0] && diagonalValue == board[2][2]) || (diagonalValue == board[0][2] && diagonalValue == board[2][0]) && diagonalValue != 0);
+	
+	bool diagonalWin = ((diagonalValue == board[0][0] && diagonalValue == board[2][2]) 
+		|| (diagonalValue == board[0][2] && diagonalValue == board[2][0]) && diagonalValue != 0);
+
 	return diagonalWin ? diagonalValue : 0;
 }
 
