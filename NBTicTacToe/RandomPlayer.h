@@ -3,6 +3,6 @@
 class RandomPlayer : public Player
 {
 	// Inherited via Player
-	char processMove(Coordinate&, TicTacToe*, int) override;
+	void processMove(Coordinate&, TicTacToe*, int) override;
 };
 

@@ -5,7 +5,8 @@
 class Player
 {
 public:
-	virtual char processMove(Coordinate&, TicTacToe*, int) = 0;
+	virtual void processMove(Coordinate&, TicTacToe*, int) = 0;
 protected:
+	void addMoveToBoard(TicTacToe*, Coordinate, int);
 	char getPlayerCharacter(int);
 };

@@ -1,7 +1,8 @@
 #include "RandomPlayer.h"
+#include <iostream>
 #include <ctime>
 
-char RandomPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int _cellValue)
+void RandomPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int _cellValue)
 {
 	char p = getPlayerCharacter(_cellValue);
 
@@ -10,6 +11,8 @@ char RandomPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int
 
 	srand(time(NULL));
 
+	std::cout << std::endl << "Player: " << p << "'s move. Please enter a coord (X Y): ";
+
 	do
 	{
 		x = rand() % 3;
@@ -17,5 +20,6 @@ char RandomPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int
 	} 
 	while (!_board->isValidMove(x, y));
 	_movePosition = Coordinate(x, y);
-	return p;
+
+	addMoveToBoard(_board, _movePosition, _cellValue);
 }

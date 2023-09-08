@@ -43,8 +43,12 @@ bool TicTacToe::isValidMove(int _x, int _y)
 }
 
 /// <summary>
-/// When called, will tell the array at position {x,y} this <seealso cref="player"/> made a move
+/// Inputs moves into the cells array
+///  of this board, taking in 3 integer values
 /// </summary>
+/// <param name="_x">X coordinate of the cell</param>
+/// <param name="_y">y coordinate of the cell</param>
+/// <param name="_player">what player it is, 0 = empty; 1 = X; and -1 = O</param>
 void TicTacToe::addMove(int _x, int _y, int _player)
 {
 	cells[_x][_y] = _player;

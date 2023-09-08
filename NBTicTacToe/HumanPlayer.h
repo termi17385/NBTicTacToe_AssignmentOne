@@ -5,6 +5,6 @@ class HumanPlayer : public Player
 {
 	// Inherited via Player
 public:
-	char processMove(Coordinate&, TicTacToe*, int) override;
+	void processMove(Coordinate&, TicTacToe*, int) override;
 };
 

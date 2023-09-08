@@ -5,6 +5,7 @@
 
 #include "Coordinate.h"
 #include "NBTicTacToe.h"
+#include "Player.h"
 
 namespace NBGAME
 {
@@ -22,20 +23,37 @@ namespace NBGAME
 		NBTicTacToe nbTicTacToe;
 		Player* players[2];
 
+		Coordinate handleLevelChange(int&, Coordinate);
 		GameState currentGameState = IsPlaying;
 		int amountOfFullBoards = 0;
 
 		bool allBoardsFull();
-		void determineWinner(int);
+		void determineWinner(int&);
+		bool checkGameState();
 
-		void initialisePlayers();
+		bool randomX = false;
+		bool randomO = false;
+		bool randomBoth = false;
+
+		int determinePlayer(int);
+
 
 	public:
-		NBGame(Coordinate _startingBoard)
+		NBGame(Coordinate _startingBoard, bool _x, bool _o, bool _both)
 		{
 			nb_currentBoard = _startingBoard;
 			nbTicTacToe.setCurrentBoard(_startingBoard);
-		}
+
+			if (_both)
+			{
+				randomBoth = _both;
+				return;
+			}
+
+			randomX = _x;
+			randomO = _o;
+		} 
+		void initialisePlayers();
 		void play();
 	};
 }

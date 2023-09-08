@@ -55,7 +55,7 @@ void NBTicTacToe::displayCells(int _boardX, int _boardY, int& _counter, int _ind
 		for (int cellY = 0; cellY < BOARDSIZE; cellY++)
 		{
 			_boardCoords.x = _boardX;
-			_boardCoords.y = calculateYPosition(_boardX, cellX) % 3;
+			_boardCoords.y = cellX;
 
 			// Determine if the current cell is selected
 			_isBoardSelected = validateCurrentBoard(_boardCoords);
@@ -114,10 +114,10 @@ void NBTicTacToe::displayBoards()
 #pragma endregion
 
 #pragma region Display Logic Helper functions and decomp
-int NBTicTacToe::calculateYPosition(int _a, int _b)
-{
-	return (_a * (BOARDSIZE)+_b);
-}
+//int NBTicTacToe::calculateYPosition(int _a, int _b)
+//{
+//	return (_a * (BOARDSIZE)+_b);
+//}
 
 #pragma region Displaying Player Logic
 char getPlayerForCell(int _value)
