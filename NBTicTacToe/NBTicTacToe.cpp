@@ -189,7 +189,7 @@ void NBTicTacToe::displayCells(int _boardX, int _boardY, int& _counter, int _ind
 		for (int cellY = 0; cellY < BOARDSIZE; cellY++)
 		{
 			_boardCoords.x = _boardX;
-			_boardCoords.y = calculateYPosition(_boardX, cellX) % 3;
+			_boardCoords.y = cellX;
 
 			// Determine if the current cell is selected
 			_isBoardSelected = checkXY(_boardCoords);
@@ -199,7 +199,7 @@ void NBTicTacToe::displayCells(int _boardX, int _boardY, int& _counter, int _ind
 			if (cellY == 0) cout << selectedBoardChar; // Display '*' or '|' at the beginning of a cell row
 			else cout << '|'; // Display '|' for the separator between cell rows
 
-			//cout << boardCoords.x + 1 << "," << boardCoords.y + 1;
+			//cout << _boardCoords.x + 1 << "," << _boardCoords.y + 1;
 			displayPlayerOnBoard(_boardCoords, _index, cellY);
 			if (cellY == 2) cout << selectedBoardChar;
 		}
