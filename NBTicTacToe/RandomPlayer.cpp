@@ -16,7 +16,7 @@ void RandomPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int
 	do
 	{
 		x = rand() % 3;
-		x = rand() % 3;
+		y = rand() % 3;
 	} 
 	while (!_board->isValidMove(x, y));
 	_movePosition = Coordinate(x, y);

@@ -46,16 +46,16 @@ bool NBTicTacToe::isBoardFull(Coordinate _current)
 #pragma endregion
 
 #pragma region Board Display Logic
-void NBTicTacToe::displayCells(int _boardX, int _boardY, int& _counter, int _index, bool _isBoardSelected, Coordinate& _boardCoords)
+void NBTicTacToe::displayCells(int _boardX, int _cellX, int& _counter, int _index, bool _isBoardSelected, Coordinate& _boardCoords)
 {
 	// Loop through each cell in the row
-	for (int cellX = 0; cellX < BOARDSIZE; cellX++)
+	for (int boardY = 0; boardY < BOARDSIZE; boardY++)
 	{
 		// Loop through each row within a cell
 		for (int cellY = 0; cellY < BOARDSIZE; cellY++)
 		{
 			_boardCoords.x = _boardX;
-			_boardCoords.y = cellX;
+			_boardCoords.y = boardY;
 
 			// Determine if the current cell is selected
 			_isBoardSelected = validateCurrentBoard(_boardCoords);
@@ -65,14 +65,14 @@ void NBTicTacToe::displayCells(int _boardX, int _boardY, int& _counter, int _ind
 			if (cellY == 0) cout << selectedBoardChar; // Display '*' or '|' at the beginning of a cell row
 			else cout << '|'; // Display '|' for the separator between cell rows
 
-			//cout << boardCoords.x + 1 << "," << boardCoords.y + 1;
+			//cout << _boardCoords.x + 1 << "," << _boardCoords.y + 1;
 			displayPlayerOnBoard(_boardCoords, _index, cellY);
 			if (cellY == 2) cout << selectedBoardChar;
 		}
 
 		// Display the board number (1, 2, 3) on the side of the board when
 		// cellX is 2 (end of the row) and boardY is 1 (middle row of boards) 
-		if (cellX == 2 && _boardY == 1)
+		if (boardY == 2 && _cellX == 1)
 		{
 			cout << " < " << _counter; // Display the board number and increment the counter
 			_counter++;
@@ -96,16 +96,16 @@ void NBTicTacToe::displayBoards()
 		displayBarsOrDividers(boardX);
 
 		// Loop through each row of cells in the current board
-		for (int boardY = 0; boardY < BOARDSIZE; boardY++)
+		for (int cellX = 0; cellX < BOARDSIZE; cellX++)
 		{
 			// Loop through each cell in the row
-			displayCells(boardX, boardY, counter, index, isBoardSelected, boardCoords);
+			displayCells(boardX, cellX, counter, index, isBoardSelected, boardCoords);
 
 			index++;
 			index = index % 3;
 
 			cout << endl;
-			if (boardY != 2) displayBarsOrDividers(boardX, true);
+			if (cellX != 2) displayBarsOrDividers(boardX, true);
 		}
 
 		displayBarsOrDividers(boardX);

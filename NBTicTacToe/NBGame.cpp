@@ -60,6 +60,8 @@ void NBGAME::NBGame::play()
 
 		nb_currentBoard = handleLevelChange(symbolBeingPlayed, movePosition);
 		
+		cout << endl << endl;
+
 		nbTicTacToe.displayNBTicTacToe();
 	} 
 	while (checkGameState());
