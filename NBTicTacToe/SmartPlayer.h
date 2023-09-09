@@ -8,9 +8,14 @@ class SmartPlayer : public Player
 
 private:
 	NBTicTacToe nbTicTacToe;
-	bool checkCurrentBoard(TicTacToe&, Coordinate&);
-public:
+	bool checkCurrentBoard(TicTacToe&, Coordinate&, int);
+	bool checkNextBoard(Coordinate&);
 
+	Coordinate checkRows(TicTacToe, int, bool&);
+	Coordinate checkColumns(TicTacToe, int, bool&);
+	Coordinate checkDiagonals(TicTacToe, int, bool&);
+
+public:
 	SmartPlayer(NBTicTacToe _nbttt)
 	{
 		nbTicTacToe = _nbttt;

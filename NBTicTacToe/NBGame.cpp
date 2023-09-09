@@ -14,15 +14,26 @@ const int MAXMOVES = 9;
 void NBGAME::NBGame::initialisePlayers()
 {
 	players[0] = new HumanPlayer();
-	players[1] = new RandomPlayer();
-	players[2] = new SmartPlayer(nbTicTacToe);
+	players[2] = new RandomPlayer();
+	players[1] = new SmartPlayer(nbTicTacToe);
 }
 
 Coordinate NBGAME::NBGame::handleLevelChange(int& _symbolBeingPlayed, Coordinate _newCurrentBoard)
 {
 	_symbolBeingPlayed = _symbolBeingPlayed ==  1 ? -1 : 1;
-	nbTicTacToe.setCurrentBoard(_newCurrentBoard);
-	return _newCurrentBoard;
+	Coordinate newBoard = _newCurrentBoard;
+
+	if (nbTicTacToe.getBoard(newBoard)->t_isBoardFull())
+	{
+		srand(time(NULL));
+		do
+		{
+			newBoard = Coordinate(rand()%3, rand()%3);
+		} while (!nbTicTacToe.getBoard(newBoard)->t_isBoardFull());
+	}
+
+	nbTicTacToe.setCurrentBoard(newBoard);
+	return newBoard;
 }
 
 bool NBGAME::NBGame::checkGameState()
