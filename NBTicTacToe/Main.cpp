@@ -35,7 +35,6 @@ void runGame()
 
 	Coordinate startCoordinate = getRandomStartingPoint();
 	NBGAME::NBGame game(startCoordinate, x, o, both);
-	game.initialisePlayers();
 	game.play();
 }
 

@@ -21,7 +21,7 @@ namespace NBGAME
 	private:
 		Coordinate nb_currentBoard;
 		NBTicTacToe nbTicTacToe;
-		Player* players[2];
+		Player* players[3];
 
 		Coordinate handleLevelChange(int&, Coordinate);
 		GameState currentGameState = IsPlaying;
@@ -36,6 +36,7 @@ namespace NBGAME
 		bool randomBoth = false;
 
 		int determinePlayer(int);
+		void initialisePlayers();
 
 
 	public:
@@ -52,8 +53,9 @@ namespace NBGAME
 
 			randomX = _x;
 			randomO = _o;
+
+			initialisePlayers();
 		} 
-		void initialisePlayers();
 		void play();
 	};
 }

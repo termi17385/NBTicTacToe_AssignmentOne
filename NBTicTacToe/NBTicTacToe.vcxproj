@@ -132,6 +132,7 @@
     <ClCompile Include="NBTicTacToe.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomPlayer.cpp" />
+    <ClCompile Include="SmartPlayer.cpp" />
     <ClCompile Include="TicTacToe.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="NBGame.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="NBTicTacToe.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RandomPlayer.h" />
+    <ClInclude Include="SmartPlayer.h" />
     <ClInclude Include="TicTacToe.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="NBGame.h" />

@@ -3,6 +3,7 @@
 
 #include "HumanPlayer.h"
 #include "RandomPlayer.h"
+#include "SmartPlayer.h"
 
 #include <iostream>
 
@@ -14,6 +15,7 @@ void NBGAME::NBGame::initialisePlayers()
 {
 	players[0] = new HumanPlayer();
 	players[1] = new RandomPlayer();
+	players[2] = new SmartPlayer(nbTicTacToe);
 }
 
 Coordinate NBGAME::NBGame::handleLevelChange(int& _symbolBeingPlayed, Coordinate _newCurrentBoard)
