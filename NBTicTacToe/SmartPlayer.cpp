@@ -5,185 +5,174 @@ using namespace std;
 void SmartPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int _cellValue)
 {
 	bool canMove = false;
+	bool win = false;
+	bool lose = false;
 
-	do
-	{
-		canMove = checkCurrentBoard(*_board, _movePosition, _cellValue);
-	} while (!canMove);
+	checkRowsAndColumns(_movePosition, *_board, _cellValue, win, lose);
+
+	if (!win) checkNextBoard(_movePosition, _cellValue);
 
 	addMoveToBoard(_board, _movePosition, _cellValue);
 }
 
-bool SmartPlayer::checkCurrentBoard(TicTacToe& _board, Coordinate& _movePosition, int _player)
+void SmartPlayer::checkNextBoard(Coordinate& _movePosition, int _player)
 {
-	TicTacToe _boardCopy = _board;
+	TicTacToe& board = *nbTicTacToe->getBoard(_movePosition);
+	TicTacToe boardCopy = board;
 
-	// grab the avaliable positions for a placement
-	Coordinate rowCoord;
-	Coordinate colCoord;
-	Coordinate diagCoord;
+	int boardMove = boardCopy.getNoOfMoves();
 
-	bool winningSpot;
+	cout << "scanning next board for potenial lose or misplay" << endl;
 
-	cout << endl << endl << "Checking Rows";
-	rowCoord = checkRows(_boardCopy, _player, winningSpot);
-	if (winningSpot)
+	if (boardMove <= 1)
 	{
-		_movePosition = rowCoord;
-		return true;
+		cout << "Best Board to Choose" << endl;
+		return;
 	}
 
-	cout << endl << "Checking Columns";
-	colCoord = checkColumns(_boardCopy, _player, winningSpot);
-	if (winningSpot)
+	bool win = false;
+	bool lose = false;
+
+	Coordinate tempMove;
+
+	checkRowsAndColumns(tempMove, boardCopy, _player, win, lose);
+
+	if (win || lose)
 	{
-		_movePosition = colCoord;
-		return true;
+		cout << "This board would be a deterimental choice" << endl;
+		// we need to choose another board
 	}
 
-	cout << endl << "Checking Diagonals";
-	diagCoord = checkDiagonals(_boardCopy, _player, winningSpot);
-	if (winningSpot)
+	else
 	{
-		_movePosition = diagCoord;
-		return true;
+		cout << "This board is a safe option" << endl;
 	}
-	
-
-	// Compare the possible win with the player int, to determine if its our win or an enemy win
-	// Store that position if its an enemy win, or win.
-	
-	if (checkNextBoard(rowCoord))
-	{
-		_movePosition = rowCoord;
-		return true;
-	}
-
-	if (checkNextBoard(colCoord))
-	{
-		_movePosition = colCoord;
-		return true;
-	}
-
-	if (checkNextBoard(diagCoord))
-	{
-		_movePosition = diagCoord;
-		return true;
-	}
-
-	return false;
 }
 
-bool SmartPlayer::checkNextBoard(Coordinate& _gridCoords)
-{
-	if (nbTicTacToe.getBoard(_gridCoords)->getNoOfMoves() <= 1) return true;
-	// Check if there is any other positions that might be a win then check if that position leads to a winning board
-	// if it leads to a winning board avoid that board no matter who is winning, as either the enemy wins or blocks our win
 
-	return false;
-}
-
-Coordinate SmartPlayer::checkRows(TicTacToe _board, int _player, bool& _winSpotted)
+void SmartPlayer::checkRowsAndColumns(Coordinate& _move, TicTacToe& _board, int _player, bool& _win, bool& _lose)
 {
-	Coordinate coordToReturn;
-	for (int i = 0; i < BOARDSIZE; i++)
+	TicTacToe boardCopy = _board;
+	bool chosen = false;
+	
+	int index = 0;
+	int rowBlockableTargets = 0;
+	int columnBlockableTargets = 0;
+
+
+	for (int x = 0; x < 3 && !chosen; x++)
 	{
-		int a = _board.getMove(i, 0);
-		int b = _board.getMove(i, 1);
-		int c = _board.getMove(i, 2);
-
-		cout << endl << "Scanning rows: {" << 0 << "," << i << " " << 1 << "," << i << " " << 2 << "," << i << "}" << endl;
-
-		// prioritise winning spots
-		if (a == b && c == 0)
+		for (int y = 0; y < 3 && !chosen; y++)
 		{
-			if (a != _player);
-			{
-				cout << endl << "Winning spot identified";
-				_winSpotted = true;
-				return Coordinate(i, 2);
-			}
+#pragma region Setup
+			Coordinate currentPosition(x,y);
+			int previousX = x <= 0 ? 2 : x - 1;
+			int nextX = x >= 2 ? 0 : x + 1;
+
+			int previousY = y <= 0 ? 2 : y - 1;
+			int nextY = y >= 2 ? 0 : y + 1;
+
+			if (chosen) continue;
+
+			xCell = CellData(boardCopy.getMove(nextX, y), boardCopy.getMove(previousX, y));
+			yCell = CellData(boardCopy.getMove(x, nextY), boardCopy.getMove(x, previousY));
 			
-			coordToReturn = Coordinate(i, 2);
-		}
-
-		if (a == c && b == 0)
-		{
-			if (a != _player);
+			bool canMove = boardCopy.isValidMove(currentPosition.x, currentPosition.y);
+#pragma endregion
+			if (canMove)
 			{
-				cout << endl << "Winning spot identified";
-				_winSpotted = true;
-				return Coordinate(i, 1);
+				cout << "Looking for potenial win position \n";
+
+				if (yCell.previousCell == yCell.nextCell && yCell.previousCell != 0)
+				{
+					cout << "Scanning \n";
+					if (yCell.previousCell == _player)
+					{
+						cout << "Winning spot found!" << endl;
+						_win = true;
+						_lose = false;
+
+						_move = Coordinate(x,y);
+						chosen = true;
+						continue;
+					}
+					else
+					{
+						cout << "Adding Potential Block" << endl;
+						index = x + y;
+
+						if (index < 9)
+						{
+							_lose = true;
+							_win = false;
+
+							potentialBlocksRows[index] = Coordinate(x,y);
+							rowBlockableTargets++;
+						}
+					}
+				}
+
+				if (xCell.previousCell == xCell.nextCell && xCell.previousCell != 0)
+				{
+					cout << "Scanning \n";
+					if (xCell.previousCell == _player)
+					{
+						cout << "Winning spot found!" << endl;
+
+						_move = Coordinate(x, y);
+						_win = true;
+						_lose = false;
+
+						chosen = true;
+						continue;
+					}
+					else
+					{
+						cout << "Adding Potential Block" << endl;
+						index = x + y;
+
+						if (index < 9)
+						{
+							_lose = true;
+							_win = false;
+
+							potentialBlocksColumns[index] = Coordinate(x, y);
+							columnBlockableTargets++;
+						}
+					}
+				}
 			}
-
-			coordToReturn = Coordinate(i, 1);
-		}
-
-		if (b == c && a == 0)
-		{
-			if (b != _player)
-			{
-				cout << endl << "Winning spot identified";
-				_winSpotted = true;
-				return Coordinate(i, 0);
-			}
-
-			coordToReturn = Coordinate(i, 0);
 		}
 	}
-}
 
-Coordinate SmartPlayer::checkColumns(TicTacToe _board, int _player, bool& _winSpotted)
-{
-	Coordinate coordToReturn;
-	for (int i = 0; i < BOARDSIZE; i++)
+	if (!chosen)
 	{
-		int a = _board.getMove(0, i);
-		int b = _board.getMove(1, i);
-		int c = _board.getMove(2, i);
-								  
-		cout << endl << "Scanning rows: {" << i << "," << 0 << " " << i << "," << 1 << " " << i << "," << 2 << "}" << endl;
-
-		// prioritise winning spots
-		if (a == b && c == 0)
+		if (rowBlockableTargets > 0)
 		{
-			if (a != _player);
-			{
-				cout << endl << "Winning spot identified";
-				_winSpotted = true;
-				return Coordinate(2, i);
-			}
-
-			coordToReturn = Coordinate(2, i);
+			cout << "Blocking Spot" << endl;
+			srand(time(NULL));
+			_move = potentialBlocksRows[rand() % 9];
 		}
-
-		if (a == c && b == 0)
+		else if (columnBlockableTargets > 0)
 		{
-			if (a != _player);
-			{
-				cout << endl << "Winning spot identified";
-				_winSpotted = true;
-				return Coordinate(1, i);
-			}
-
-			coordToReturn = Coordinate(1, i);
+			cout << "Blocking Spot" << endl;
+			srand(time(NULL));
+			_move = potentialBlocksColumns[rand() % 9];
 		}
-
-		if (b == c && a == 0)
+		else
 		{
-			if (b != _player)
-			{
-				cout << endl << "Winning spot identified";
-				_winSpotted = true;
-				return Coordinate(0, i);
-			}
-
-			coordToReturn = Coordinate(0, i);
+			randomMove(_move, boardCopy);
 		}
 	}
 }
 
-Coordinate SmartPlayer::checkDiagonals(TicTacToe, int _player, bool& _winSpotted)
+void SmartPlayer::randomMove(Coordinate& _movePosition, TicTacToe& _board)
 {
-	return Coordinate();
+	TicTacToe boardCopy = _board;
+	do
+	{
+		cout << "Randomising Move" << endl;
+		_movePosition = Coordinate(rand() % 3, rand() % 3);
+
+	} while (!boardCopy.isValidMove(_movePosition.x, _movePosition.y));
 }

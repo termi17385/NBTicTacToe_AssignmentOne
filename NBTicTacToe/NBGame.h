@@ -7,6 +7,10 @@
 #include "NBTicTacToe.h"
 #include "Player.h"
 
+#include "HumanPlayer.h"
+#include "RandomPlayer.h"
+#include "SmartPlayer.h"
+
 namespace NBGAME
 {
 	enum GameState
@@ -20,7 +24,7 @@ namespace NBGAME
 	{
 	private:
 		Coordinate nb_currentBoard;
-		NBTicTacToe nbTicTacToe;
+		NBTicTacToe* nbTicTacToe;
 		Player* players[3];
 
 		Coordinate handleLevelChange(int&, Coordinate);
@@ -36,14 +40,16 @@ namespace NBGAME
 		bool randomBoth = false;
 
 		int determinePlayer(int);
-		void initialisePlayers();
 
 
 	public:
 		NBGame(Coordinate _startingBoard, bool _x, bool _o, bool _both)
 		{
+			nbTicTacToe = new NBTicTacToe;
+
+			nbTicTacToe->setCurrentBoard(_startingBoard);
+
 			nb_currentBoard = _startingBoard;
-			nbTicTacToe.setCurrentBoard(_startingBoard);
 
 			if (_both)
 			{
@@ -51,10 +57,12 @@ namespace NBGAME
 				return;
 			}
 
+			players[0] = new HumanPlayer();
+			players[2] = new RandomPlayer();
+			players[1] = new SmartPlayer(nbTicTacToe);
+
 			randomX = _x;
 			randomO = _o;
-
-			initialisePlayers();
 		} 
 		void play();
 	};

@@ -15,12 +15,6 @@ void HumanPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int 
 
 		x--;
 		y--;
-
-		if (x <= 0) x = 0;
-		if (y <= 0) y = 0;
-
-		if (x >= 2) y = 2;
-		if (y >= 2) y = 2;
 	} 
 	while (!_board->isValidMove(x, y));	
 	_movePosition = Coordinate(x, y);

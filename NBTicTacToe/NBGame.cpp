@@ -1,38 +1,26 @@
 #include "Coordinate.h"
 #include "NBGame.h"
-
-#include "HumanPlayer.h"
-#include "RandomPlayer.h"
-#include "SmartPlayer.h"
-
 #include <iostream>
 
 using namespace std;
 
 const int MAXMOVES = 9;
 
-void NBGAME::NBGame::initialisePlayers()
-{
-	players[0] = new HumanPlayer();
-	players[2] = new RandomPlayer();
-	players[1] = new SmartPlayer(nbTicTacToe);
-}
-
 Coordinate NBGAME::NBGame::handleLevelChange(int& _symbolBeingPlayed, Coordinate _newCurrentBoard)
 {
 	_symbolBeingPlayed = _symbolBeingPlayed ==  1 ? -1 : 1;
 	Coordinate newBoard = _newCurrentBoard;
 
-	if (nbTicTacToe.getBoard(newBoard)->t_isBoardFull())
+	if (nbTicTacToe->getBoard(newBoard)->t_isBoardFull())
 	{
 		srand(time(NULL));
 		do
 		{
 			newBoard = Coordinate(rand()%3, rand()%3);
-		} while (!nbTicTacToe.getBoard(newBoard)->t_isBoardFull());
+		} while (!nbTicTacToe->getBoard(newBoard)->t_isBoardFull());
 	}
 
-	nbTicTacToe.setCurrentBoard(newBoard);
+	nbTicTacToe->setCurrentBoard(newBoard);
 	return newBoard;
 }
 
@@ -65,7 +53,7 @@ void NBGAME::NBGame::play()
 
 	do
 	{
-		TicTacToe* board = nbTicTacToe.getBoard(nb_currentBoard);
+		TicTacToe* board = nbTicTacToe->getBoard(nb_currentBoard);
 		
 		players[determinePlayer(symbolBeingPlayed)]->processMove(movePosition, board, symbolBeingPlayed);
 
@@ -75,7 +63,7 @@ void NBGAME::NBGame::play()
 		
 		cout << endl << endl;
 
-		nbTicTacToe.displayNBTicTacToe();
+		nbTicTacToe->displayNBTicTacToe();
 	} 
 	while (checkGameState());
 
@@ -89,7 +77,7 @@ bool NBGAME::NBGame::allBoardsFull()
 
 void NBGAME::NBGame::determineWinner(int& _winningPlayer)
 {
-	TicTacToe* _board = nbTicTacToe.getBoard(nb_currentBoard);
+	TicTacToe* _board = nbTicTacToe->getBoard(nb_currentBoard);
 	int result = _board->gameStatus();
 
 	if (result == 1 || result == -1)
