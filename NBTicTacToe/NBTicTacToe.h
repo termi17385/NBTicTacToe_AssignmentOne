@@ -11,14 +11,13 @@ private:
 	TicTacToe boards[BOARDSIZE][BOARDSIZE];
 	Coordinate currentBoard;
 
-	//int calculateYPosition(int, int);
 	bool validateCurrentBoard(Coordinate); 
 	void displayBarsOrDividers(int, bool _isDivider = false);
 	void displayPlayerOnBoard(Coordinate, int, int);
 
-
 	void displayBoards();
-	void displayCells(int, int, int&, int, bool, Coordinate&);
+	void displayCells(int, int, int&, bool);
+	void displayCell(Coordinate, bool, int, int);
 
 public:
 

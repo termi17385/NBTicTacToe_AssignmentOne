@@ -133,7 +133,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomPlayer.cpp" />
     <ClCompile Include="TicTacToe.cpp" />
-    <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="NBGame.cpp" />
   </ItemGroup>
   <ItemGroup>

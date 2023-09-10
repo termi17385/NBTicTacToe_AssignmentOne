@@ -7,6 +7,9 @@
 #include "NBTicTacToe.h"
 #include "Player.h"
 
+#include "HumanPlayer.h"
+#include "RandomPlayer.h"
+
 namespace NBGAME
 {
 	enum GameState
@@ -15,7 +18,6 @@ namespace NBGAME
 		GameOver = 1,
 		GameDrawn = 2
 	};
-
 	class NBGame
 	{
 	private:
@@ -28,7 +30,7 @@ namespace NBGAME
 		int amountOfFullBoards = 0;
 
 		bool allBoardsFull();
-		void determineWinner(int&);
+		void updateGameState(int&);
 		bool checkGameState();
 
 		bool randomX = false;
@@ -41,6 +43,9 @@ namespace NBGAME
 	public:
 		NBGame(Coordinate _startingBoard, bool _x, bool _o, bool _both)
 		{
+			players[0] = new HumanPlayer();
+			players[1] = new RandomPlayer();
+
 			nb_currentBoard = _startingBoard;
 			nbTicTacToe.setCurrentBoard(_startingBoard);
 
@@ -53,9 +58,8 @@ namespace NBGAME
 			randomX = _x;
 			randomO = _o;
 		} 
-		void initialisePlayers();
 		void play();
 	};
 }
-
+void displayWinner(NBGAME::GameState _state, int _winningPlayer);
 #endif

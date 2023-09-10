@@ -11,10 +11,6 @@ using namespace std;
 
 const int MAXMOVES = 9;
 
-/// <summary>
-/// This is a Constructor is it called on the initialisation of the object
-/// since this Constructor has no params nothing else is needed, it will run on creation
-/// </summary>
 TicTacToe::TicTacToe()
 {
 	for (int row = 0; row < 3; row++)
@@ -28,27 +24,10 @@ int TicTacToe::getNoOfMoves()
 {
 	return noOfMoves;
 }
-
 int TicTacToe::getMove(int _x, int _y)
 {
 	return cells[_x][_y];
 }
-
-bool TicTacToe::isValidMove(int _x, int _y)
-{
-	if (cells[_x][_y] == 0)
-		return true;
-	else
-		return false;
-}
-
-/// <summary>
-/// Inputs moves into the cells array
-///  of this board, taking in 3 integer values
-/// </summary>
-/// <param name="_x">X coordinate of the cell</param>
-/// <param name="_y">y coordinate of the cell</param>
-/// <param name="_player">what player it is, 0 = empty; 1 = X; and -1 = O</param>
 void TicTacToe::addMove(int _x, int _y, int _player)
 {
 	cells[_x][_y] = _player;
@@ -69,7 +48,6 @@ int TicTacToe::checkRows()
 
 	return 0;
 }
-
 int TicTacToe::checkColumns()
 {
 	int colValue = 0;
@@ -84,7 +62,6 @@ int TicTacToe::checkColumns()
 
 	return 0;
 }
-
 int TicTacToe::checkDiagonals()
 {
 	//Check diagonals for a win
@@ -101,23 +78,26 @@ int TicTacToe::checkDiagonals()
 	return diagonalWin ? diagonalValue : 0;
 }
 
+bool TicTacToe::isValidMove(int _x, int _y)
+{
+	if (cells[_x][_y] == 0)
+		return true;
+	else
+		return false;
+}
 int TicTacToe::gameStatus()
 {
 	int winner = 0;
-	// First check if this is a draw, if so then skip
 	if (noOfMoves >= 9) return 2;
 
-	// Check Rows and Columns, the if statements are so we do not prematurely return.
 	winner = checkRows();
 	if (winner != 0) return winner;   
 
 	winner = checkColumns();
 	if (winner != 0) return winner;
 
-	// Lastly checkDiagonals
 	return checkDiagonals();
 }
-
 bool TicTacToe::t_isBoardFull()
 {
 	return noOfMoves >= MAXMOVES;

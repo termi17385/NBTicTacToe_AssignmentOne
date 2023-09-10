@@ -1,47 +1,9 @@
 #include "Coordinate.h"
 #include "NBGame.h"
-
-#include "HumanPlayer.h"
-#include "RandomPlayer.h"
-
 #include <iostream>
 
 using namespace std;
-
 const int MAXMOVES = 9;
-
-void NBGAME::NBGame::initialisePlayers()
-{
-	players[0] = new HumanPlayer();
-	players[1] = new RandomPlayer();
-}
-
-Coordinate NBGAME::NBGame::handleLevelChange(int& _symbolBeingPlayed, Coordinate _newCurrentBoard)
-{
-	_symbolBeingPlayed = _symbolBeingPlayed ==  1 ? -1 : 1;
-	nbTicTacToe.setCurrentBoard(_newCurrentBoard);
-	return _newCurrentBoard;
-}
-
-bool NBGAME::NBGame::checkGameState()
-{
-	return currentGameState == IsPlaying;
-}
-
-int NBGAME::NBGame::determinePlayer(int _currentSymbol)
-{
-	if (randomBoth) return 1;
-	else if (_currentSymbol == 1 && randomX) return 1;
-	else if (_currentSymbol == -1 && randomO) return 1;
-	else return 0;
-}
-
-void displayWinConditionInformation(NBGAME::GameState _state, int _winningPlayer)
-{
-	char winningChar = _winningPlayer == 1 ? 'X' : 'O';
-	if (_state == NBGAME::GameOver) cout << "The winner is {" << winningChar << "}!!";
-	else if (_state == NBGAME::GameDrawn) cout << "The Game was a Draw!";
-}
 
 void NBGAME::NBGame::play()
 {
@@ -56,7 +18,7 @@ void NBGAME::NBGame::play()
 		
 		players[determinePlayer(symbolBeingPlayed)]->processMove(movePosition, board, symbolBeingPlayed);
 
-		determineWinner(winner);
+		updateGameState(winner);
 
 		nb_currentBoard = handleLevelChange(symbolBeingPlayed, movePosition);
 		
@@ -66,15 +28,35 @@ void NBGAME::NBGame::play()
 	} 
 	while (checkGameState());
 
-	displayWinConditionInformation(currentGameState, winner);
+	displayWinner(currentGameState, winner);
 }
 
+#pragma region Level and Player selection
 bool NBGAME::NBGame::allBoardsFull()
 {
 	return amountOfFullBoards >= MAXMOVES;
 }
+Coordinate NBGAME::NBGame::handleLevelChange(int& _symbolBeingPlayed, Coordinate _newCurrentBoard)
+{
+	_symbolBeingPlayed = _symbolBeingPlayed == 1 ? -1 : 1;
+	nbTicTacToe.setCurrentBoard(_newCurrentBoard);
+	return _newCurrentBoard;
+}
+int NBGAME::NBGame::determinePlayer(int _currentSymbol)
+{
+	if (randomBoth) return 1;
+	else if (_currentSymbol == 1 && randomX) return 1;
+	else if (_currentSymbol == -1 && randomO) return 1;
+	else return 0;
+}
+#pragma endregion
 
-void NBGAME::NBGame::determineWinner(int& _winningPlayer)
+#pragma region State Changes and Win Condition
+bool NBGAME::NBGame::checkGameState()
+{
+	return currentGameState == IsPlaying;
+}
+void NBGAME::NBGame::updateGameState(int& _winningPlayer)
 {
 	TicTacToe* _board = nbTicTacToe.getBoard(nb_currentBoard);
 	int result = _board->gameStatus();
@@ -92,3 +74,10 @@ void NBGAME::NBGame::determineWinner(int& _winningPlayer)
 		return;
 	}
 }
+void displayWinner(NBGAME::GameState _state, int _winningPlayer)
+{
+	char winningChar = _winningPlayer == 1 ? 'X' : 'O';
+	if (_state == NBGAME::GameOver) cout << "The winner is {" << winningChar << "}!!";
+	else if (_state == NBGAME::GameDrawn) cout << "The Game was a Draw!";
+}
+#pragma endregion
