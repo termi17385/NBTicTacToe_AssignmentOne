@@ -13,6 +13,15 @@
 
 namespace NBGAME
 {
+	enum PlayerSelect : int
+	{
+		SmartVPlayer = 0,
+		SmartXRandO = 1,
+		SmartVSmart = 2,
+		RandomVRand = 3,
+		BothPlayers = 4
+	};
+
 	enum GameState
 	{
 		IsPlaying = 0,
@@ -35,36 +44,33 @@ namespace NBGAME
 		void determineWinner(int&);
 		bool checkGameState();
 
-		bool randomX = false;
-		bool randomO = false;
-		bool randomBoth = false;
+		int naughtValue = -1;
+		int crossValue = -1;
 
 		int determinePlayer(int);
-
+		void deletePointers();
+		void selectGameMode(int);
 
 	public:
-		NBGame(Coordinate _startingBoard, bool _x, bool _o, bool _both)
+		NBGame() = default;
+
+		NBGame(Coordinate _startingBoard, int _gameMode)
 		{
 			nbTicTacToe = new NBTicTacToe;
 
 			nbTicTacToe->setCurrentBoard(_startingBoard);
 
 			nb_currentBoard = _startingBoard;
-
-			if (_both)
-			{
-				randomBoth = _both;
-				return;
-			}
-
+			
 			players[0] = new HumanPlayer();
-			players[2] = new RandomPlayer();
-			players[1] = new SmartPlayer(nbTicTacToe);
+			players[1] = new RandomPlayer();
+			players[2] = new SmartPlayer(nbTicTacToe);
 
-			randomX = _x;
-			randomO = _o;
+			selectGameMode(_gameMode);
 		} 
 		void play();
+
+		int xWinCounter = 0;
 	};
 }
 

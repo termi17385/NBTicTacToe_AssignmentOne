@@ -4,18 +4,20 @@ using namespace std;
 
 void SmartPlayer::processMove(Coordinate& _movePosition, TicTacToe* _board, int _cellValue)
 {
+	srand(time(NULL));
+
 	bool canMove = false;
 	bool win = false;
 	bool lose = false;
 
 	checkRowsAndColumns(_movePosition, *_board, _cellValue, win, lose);
 
-	if (!win) checkNextBoard(_movePosition, _cellValue);
+	if (!win) checkNextBoard(_movePosition, _cellValue, 0);
 
 	addMoveToBoard(_board, _movePosition, _cellValue);
 }
 
-void SmartPlayer::checkNextBoard(Coordinate& _movePosition, int _player)
+void SmartPlayer::checkNextBoard(Coordinate& _movePosition, int _player, int _depth)
 {
 	TicTacToe& board = *nbTicTacToe->getBoard(_movePosition);
 	TicTacToe boardCopy = board;
@@ -37,10 +39,15 @@ void SmartPlayer::checkNextBoard(Coordinate& _movePosition, int _player)
 
 	checkRowsAndColumns(tempMove, boardCopy, _player, win, lose);
 
+	if (_depth >= MAX_DEPTH)
+		return;
+
 	if (win || lose)
 	{
 		cout << "This board would be a deterimental choice" << endl;
-		// we need to choose another board
+		checkRowsAndColumns(tempMove, boardCopy, _player, win, lose);
+		checkNextBoard(tempMove, _player, _depth + 1);
+		return;
 	}
 
 	else
@@ -92,7 +99,7 @@ void SmartPlayer::checkRowsAndColumns(Coordinate& _move, TicTacToe& _board, int 
 						_win = true;
 						_lose = false;
 
-						_move = Coordinate(x,y);
+						_move = Coordinate(x, y);
 						chosen = true;
 						continue;
 					}
@@ -149,14 +156,14 @@ void SmartPlayer::checkRowsAndColumns(Coordinate& _move, TicTacToe& _board, int 
 	{
 		if (rowBlockableTargets > 0)
 		{
+			_win = true;
 			cout << "Blocking Spot" << endl;
-			srand(time(NULL));
 			_move = potentialBlocksRows[rand() % 9];
 		}
 		else if (columnBlockableTargets > 0)
 		{
+			_win = true;
 			cout << "Blocking Spot" << endl;
-			srand(time(NULL));
 			_move = potentialBlocksColumns[rand() % 9];
 		}
 		else

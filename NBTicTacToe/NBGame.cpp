@@ -31,10 +31,58 @@ bool NBGAME::NBGame::checkGameState()
 
 int NBGAME::NBGame::determinePlayer(int _currentSymbol)
 {
-	if (randomBoth) return 1;
-	else if (_currentSymbol == 1 && randomX) return 1;
-	else if (_currentSymbol == -1 && randomO) return 1;
-	else return 0;
+	if (_currentSymbol == 1) return crossValue;
+	else return naughtValue;
+}
+
+void NBGAME::NBGame::deletePointers()
+{
+	delete nbTicTacToe;
+
+	for (int i = 0; i < 3; i++)
+	{
+		delete players[i];
+	}
+}
+
+void NBGAME::NBGame::selectGameMode(int _ans)
+{
+	PlayerSelect selection = (PlayerSelect)_ans;
+	switch (selection)
+	{
+	case NBGAME::SmartVPlayer:
+		naughtValue = 0;
+		crossValue = 2;
+
+		cout << endl << "Selected: Smart v Player" << endl;
+		break;
+	case NBGAME::SmartXRandO:
+		naughtValue = 1;
+		crossValue = 2;
+
+		cout << endl << "Selected: Smart v Random" << endl;
+		break;
+	case NBGAME::SmartVSmart:
+		naughtValue = 2;
+		crossValue = 2;
+		
+		cout << endl << "Selected: Smart v Smart" << endl;
+		break;
+	case NBGAME::RandomVRand:
+		naughtValue = 1;
+		crossValue = 1;
+		
+		cout << endl << "Selected: Random v Random" << endl;
+		break;
+	case NBGAME::BothPlayers:
+		naughtValue = 0;
+		crossValue = 0;
+		
+		cout << endl << "Selected: Player v Player" << endl;
+		break;
+	default:
+		break;
+	}
 }
 
 void displayWinConditionInformation(NBGAME::GameState _state, int _winningPlayer)
@@ -48,11 +96,10 @@ void NBGAME::NBGame::play()
 {
 	int symbolBeingPlayed = 1;
 	Coordinate movePosition(0, 0);
-
 	int winner = 0;
 
-	do
-	{
+	do {
+		
 		TicTacToe* board = nbTicTacToe->getBoard(nb_currentBoard);
 		
 		players[determinePlayer(symbolBeingPlayed)]->processMove(movePosition, board, symbolBeingPlayed);
@@ -64,10 +111,12 @@ void NBGAME::NBGame::play()
 		cout << endl << endl;
 
 		nbTicTacToe->displayNBTicTacToe();
-	} 
-	while (checkGameState());
+
+	} while (checkGameState());
 
 	displayWinConditionInformation(currentGameState, winner);
+
+	deletePointers();
 }
 
 bool NBGAME::NBGame::allBoardsFull()
@@ -84,6 +133,9 @@ void NBGAME::NBGame::determineWinner(int& _winningPlayer)
 	{
 		currentGameState = GameOver;
 		_winningPlayer = result;
+
+		if (result == 1) xWinCounter++;
+
 		return;
 	}
 

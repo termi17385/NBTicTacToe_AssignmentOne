@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "NBTicTacToe.h"
 
+const int MAX_DEPTH = 1000;
+
 struct CellData
 {
 	int nextCell;
@@ -34,7 +36,7 @@ private:
 
 	void randomMove(Coordinate&, TicTacToe&);
 
-	void checkNextBoard(Coordinate&, int);
+	void checkNextBoard(Coordinate&, int, int);
 
 public:
 	SmartPlayer(NBTicTacToe* _nbttt)
