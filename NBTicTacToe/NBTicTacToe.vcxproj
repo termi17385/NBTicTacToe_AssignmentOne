@@ -127,7 +127,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HumanPlayer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NBTicTacToe.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RandomPlayer.cpp" />
+    <ClCompile Include="TicTacToe.cpp" />
+    <ClCompile Include="NBGame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HumanPlayer.h" />
+    <ClInclude Include="NBTicTacToe.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="RandomPlayer.h" />
+    <ClInclude Include="TicTacToe.h" />
+    <ClInclude Include="Coordinate.h" />
+    <ClInclude Include="NBGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
